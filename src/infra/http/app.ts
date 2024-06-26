@@ -1,18 +1,13 @@
 import 'dotenv/config'
-import express, { NextFunction, Request, Response }  from 'express'
+import express from 'express'
 import 'express-async-errors'
 import cors from 'cors'
-import { env } from '../env'
+import routes from '../routes'
 
-export const app = express()
+const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors())
+app.use('/api', routes)
 
-export function errorHandler(error: Error, request: Request, response: Response, next: NextFunction) {
-  if (env.NODE_ENV !== 'production') {
-    console.error(error.stack)
-  }
-
-  response.status(500).json({ message: 'Internal Server Error' })
-}
+export { app }

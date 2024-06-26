@@ -6,3 +6,14 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Tenants {
+  id        String   @id @default(uuid())
+  name      String   @db.VarChar(255)
+  cnpj      String   @db.VarChar(18) @unique
+  actived   Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("update_at")
+
+  @@map("tenants")
+}
