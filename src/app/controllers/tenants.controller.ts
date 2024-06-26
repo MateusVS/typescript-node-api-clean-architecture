@@ -1,5 +1,6 @@
 import { HttpRequest, HttpResponse } from '../../infra/adapters/http.adapter'
-import { TenantDTO } from '../dto/tenants/tenant.dto';
+import * as httpStatus from '../../infra/helpers/http-response'
+import { TenantDTO } from '../dto/tenants/tenant.dto'
 import {
   CreateTenantsUseCase,
   DisableTenantUseCase,
@@ -23,16 +24,9 @@ class TenantsController {
     try {
       const response = await this.createTenantUseCase.execute(tenant)
 
-      return {
-        status: 201,
-        message: 'Tenant Created',
-        data: response,
-      }
+      return httpStatus.created('Tenant Created', response)
     } catch (error: any) {
-      return {
-        status: 400,
-        message: error.message,
-      }
+      return httpStatus.badRequest(error.message)
     }
   }
 
@@ -43,16 +37,9 @@ class TenantsController {
     try {
       const response = await this.updateTenantUseCase.execute(id, tenant)
 
-      return {
-        status: 200,
-        message: 'Tenant Updated',
-        data: response,
-      }
+      return httpStatus.ok('Tenant Updated', response)
     } catch (error: any) {
-      return {
-        status: 400,
-        message: error.message,
-      }
+      return httpStatus.badRequest(error.message)
     }
   }
 
@@ -62,16 +49,9 @@ class TenantsController {
     try {
       const response = await this.showTenantUseCase.execute(id)
 
-      return {
-        status: 200,
-        message: 'Tenant Found',
-        data: response,
-      }
+      return httpStatus.ok('Tenant Found', response)
     } catch (error: any) {
-      return {
-        status: 400,
-        message: error.message,
-      }
+      return httpStatus.badRequest(error.message)
     }
   }
 
@@ -79,16 +59,9 @@ class TenantsController {
     try {
       const response = await this.listAllTenantsUseCase.execute()
 
-      return {
-        status: 200,
-        message: 'Tenants Found',
-        data: response
-      }
+      return httpStatus.ok('Tenants Found', response)
     } catch (error: any) {
-      return {
-        status: 400,
-        message: error.message,
-      }
+      return httpStatus.badRequest(error.message)
     }
   }
 
@@ -96,17 +69,11 @@ class TenantsController {
     const id: string = httpRequest.params.id
 
     try {
-      const response = await this.disableTenantUseCase.execute(id)
+      await this.disableTenantUseCase.execute(id)
 
-      return {
-        status: 204,
-        message: 'Tenant disabled'
-      }
+      return httpStatus.noContent('Tenant Disabled')
     } catch (error: any) {
-      return {
-        status: 400,
-        message: error.message,
-      }
+      return httpStatus.badRequest(error.message)
     }
   }
 }
