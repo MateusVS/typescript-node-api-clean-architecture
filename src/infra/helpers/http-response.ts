@@ -32,3 +32,7 @@ export const serverError = (message: string): HttpResponse => ({
   message,
 })
 
+export const conflict = (message: string): HttpResponse => ({
+  status: 409,
+  message,
+})

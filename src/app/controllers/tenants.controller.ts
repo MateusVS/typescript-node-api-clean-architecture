@@ -1,7 +1,9 @@
 import { HttpRequest, HttpResponse } from '../../infra/adapters/http.adapter'
 import * as httpStatus from '../../infra/helpers/http-response'
+import { HttpException } from '../../types/HttpException'
 import { TenantDTO } from '../dto/tenants/tenant.dto'
 import {
+  CheckCnpjExistsUseCase,
   CreateTenantsUseCase,
   DisableTenantUseCase,
   ListAllTenantsUsecase,
@@ -16,17 +18,22 @@ class TenantsController {
     private listAllTenantsUseCase: ListAllTenantsUsecase,
     private showTenantUseCase: ShowTenantUsecase,
     private disableTenantUseCase: DisableTenantUseCase,
+    private checkCnpjExistsUseCase: CheckCnpjExistsUseCase,
   ) { }
 
   async create(httpRequest: HttpRequest): Promise<HttpResponse> {
     const tenant: TenantDTO = httpRequest.body
 
     try {
+      this.checkIfCnpjAlreadyExists(tenant.cnpj)
+
       const response = await this.createTenantUseCase.execute(tenant)
 
       return httpStatus.created('Tenant Created', response)
     } catch (error: any) {
-      return httpStatus.badRequest(error.message)
+      return error.message === 'CNPJ Already exists'
+        ? httpStatus.conflict(error.message)
+        : httpStatus.badRequest(error.message)
     }
   }
 
@@ -35,11 +42,15 @@ class TenantsController {
     const id: string = httpRequest.params.id
 
     try {
+      this.checkIfCnpjAlreadyExists(tenant.cnpj)
+
       const response = await this.updateTenantUseCase.execute(id, tenant)
 
       return httpStatus.ok('Tenant Updated', response)
     } catch (error: any) {
-      return httpStatus.badRequest(error.message)
+      return error.message === 'CNPJ Already exists'
+        ? httpStatus.conflict(error.message)
+        : httpStatus.badRequest(error.message)
     }
   }
 
@@ -74,6 +85,14 @@ class TenantsController {
       return httpStatus.noContent('Tenant Disabled')
     } catch (error: any) {
       return httpStatus.badRequest(error.message)
+    }
+  }
+
+  private async checkIfCnpjAlreadyExists(cnpj: string): Promise<HttpResponse | void> {
+    const cnpjAlreadyExists = await this.checkCnpjExistsUseCase.execute(cnpj)
+
+    if (cnpjAlreadyExists) {
+      throw new Error('CNPJ Already exists')
     }
   }
 }
