@@ -5,7 +5,7 @@ class ShowTenantUsecase {
   constructor(private repository: TenantsRepository) { }
 
   async execute(id: string): Promise<Tenant | null> {
-    return this.repository.findOne(id)
+    return await this.repository.findOne(id)
   }
 }
 

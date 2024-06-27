@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { HttpRequest } from './http.adapter'
-import { errorMiddleware } from '../middlewares/error.middleware'
+import { errorMiddleware } from '../../infra/middlewares/error.middleware'
 
 export const routerAdapter = (controller: any, method: string) => {
   return async (request: Request, response: Response, next: NextFunction) => {

@@ -6,7 +6,7 @@ class CreateTenantsUseCase {
   constructor(private repository: TenantsRepository) { }
 
   async execute(dto: TenantDTO): Promise<Tenant> {
-    return this.repository.create(dto)
+    return await this.repository.create(dto)
   }
 }
 

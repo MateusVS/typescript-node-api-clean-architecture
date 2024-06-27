@@ -7,7 +7,7 @@ import {
   ShowTenantUsecase,
   UpdateTenantsUseCase,
 } from '../../app/useCases/tenants'
-import { PrismaTenantsRepository } from '../database/prisma-repositories'
+import { PrismaTenantsRepository } from '../../infra/database/prisma-repositories'
 
 const repository = new PrismaTenantsRepository()
 

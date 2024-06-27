@@ -1,4 +1,4 @@
-import { env } from './infra/env'
+import { env } from './main/env'
 import { app } from './infra/http/app'
 
 app.listen(env.SERVER_PORT, () =>

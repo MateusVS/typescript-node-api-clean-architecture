@@ -4,7 +4,7 @@ class DisableTenantUseCase {
   constructor(private repository: TenantsRepository) { }
 
   async execute(id: string): Promise<void> {
-    return this.repository.disable(id)
+    return await this.repository.disable(id)
   }
 }
 

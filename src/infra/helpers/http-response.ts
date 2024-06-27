@@ -1,4 +1,4 @@
-import { HttpResponse } from '../adapters/http.adapter'
+import { HttpResponse } from '../../main/adapters/http.adapter'
 
 export const ok = (message: string, data?: any): HttpResponse => ({
   status: 200,

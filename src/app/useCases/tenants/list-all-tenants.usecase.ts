@@ -5,7 +5,7 @@ class ListAllTenantsUsecase {
   constructor(private repository: TenantsRepository) { }
 
   async execute(): Promise<Tenant[] | null> {
-    return this.repository.findAll()
+    return await this.repository.findAll()
   }
 }
 

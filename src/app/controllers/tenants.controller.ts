@@ -1,6 +1,5 @@
-import { HttpRequest, HttpResponse } from '../../infra/adapters/http.adapter'
+import { HttpRequest, HttpResponse } from '../../main/adapters/http.adapter'
 import * as httpStatus from '../../infra/helpers/http-response'
-import { HttpException } from '../../types/HttpException'
 import { TenantDTO } from '../dto/tenants/tenant.dto'
 import {
   CheckCnpjExistsUseCase,

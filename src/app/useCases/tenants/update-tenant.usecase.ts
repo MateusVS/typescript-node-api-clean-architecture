@@ -6,7 +6,7 @@ class UpdateTenantsUseCase {
   constructor(private repository: TenantsRepository) { }
 
   async execute(id: string, dto: TenantDTO): Promise<Tenant> {
-    return this.repository.update(id, dto)
+    return await this.repository.update(id, dto)
   }
 }
 
