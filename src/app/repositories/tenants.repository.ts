@@ -1,5 +1,5 @@
-import { Tenant } from '../../domain/entities/tenant.entity';
-import { TenantDTO } from '../dto/tenants/tenant.dto';
+import { Tenant } from '@domain/entities/tenant.entity'
+import { TenantDTO } from '../dto/tenants/tenant.dto'
 
 abstract class TenantsRepository {
   abstract create(dto: TenantDTO): Promise<Tenant>

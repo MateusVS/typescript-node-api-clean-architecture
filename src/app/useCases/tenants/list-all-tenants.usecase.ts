@@ -1,5 +1,5 @@
-import { Tenant } from '../../../domain/entities/tenant.entity'
-import { TenantsRepository } from '../../repositories/tenants.repository'
+import { Tenant } from '@domain/entities/tenant.entity'
+import { TenantsRepository } from '@app/repositories/tenants.repository'
 
 class ListAllTenantsUsecase {
   constructor(private repository: TenantsRepository) { }

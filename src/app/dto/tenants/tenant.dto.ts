@@ -1,11 +1,18 @@
 import { z } from 'zod'
 
-const tenantSchema = z.object({
+const isNumeric = (str: string) => /^\d+$/.test(str)
+
+const cnpjValidator = z.string().refine(
+  (cnpj) => cnpj.length === 14 && isNumeric(cnpj),
+  {
+    message: 'CNPJ must be exactly 14 numeric characters',
+  }
+)
+
+export const tenantSchema = z.object({
   name: z.string(),
-  cnpj: z.string(),
+  cnpj: cnpjValidator,
   actived: z.boolean(),
 })
 
-type tenant = z.infer<typeof tenantSchema>
-
-export type TenantDTO = tenant
+export type TenantDTO = z.infer<typeof tenantSchema>

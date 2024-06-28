@@ -1,6 +1,6 @@
-import { Tenant } from '../../../domain/entities/tenant.entity';
-import { TenantDTO } from '../../dto/tenants/tenant.dto';
-import { TenantsRepository } from '../../repositories/tenants.repository';
+import { Tenant } from '@domain/entities/tenant.entity'
+import { TenantDTO } from '@app/dto/tenants/tenant.dto'
+import { TenantsRepository } from '@app/repositories/tenants.repository'
 
 class UpdateTenantsUseCase {
   constructor(private repository: TenantsRepository) { }

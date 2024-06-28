@@ -1,4 +1,4 @@
-import { TenantsController } from '../../app/controllers/tenants.controller'
+import { TenantsController } from '@app/controllers/tenants.controller'
 import {
   CheckCnpjExistsUseCase,
   CreateTenantsUseCase,
@@ -6,8 +6,8 @@ import {
   ListAllTenantsUsecase,
   ShowTenantUsecase,
   UpdateTenantsUseCase,
-} from '../../app/useCases/tenants'
-import { PrismaTenantsRepository } from '../../infra/database/prisma-repositories'
+} from '@app/useCases/tenants'
+import { PrismaTenantsRepository } from '@infra/database/prisma-repositories'
 
 const repository = new PrismaTenantsRepository()
 

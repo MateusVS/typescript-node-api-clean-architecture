@@ -1,4 +1,4 @@
-import { TenantsRepository } from '../../repositories/tenants.repository'
+import { TenantsRepository } from '@app/repositories/tenants.repository'
 
 class DisableTenantUseCase {
   constructor(private repository: TenantsRepository) { }

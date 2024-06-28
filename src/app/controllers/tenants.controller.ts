@@ -1,6 +1,6 @@
-import { HttpRequest, HttpResponse } from '../../main/adapters/http.adapter'
-import * as httpStatus from '../../infra/helpers/http-response'
-import { TenantDTO } from '../dto/tenants/tenant.dto'
+import { HttpRequest, HttpResponse } from '@main/adapters/http.adapter'
+import * as httpStatus from '@infra/helpers/http-response'
+import { TenantDTO, tenantSchema } from '@app/dto/tenants/tenant.dto'
 import {
   CheckCnpjExistsUseCase,
   CreateTenantsUseCase,
@@ -8,7 +8,7 @@ import {
   ListAllTenantsUsecase,
   ShowTenantUsecase,
   UpdateTenantsUseCase,
-} from '../useCases/tenants'
+} from '@app/useCases/tenants'
 
 class TenantsController {
   constructor(
@@ -21,35 +21,39 @@ class TenantsController {
   ) { }
 
   async create(httpRequest: HttpRequest): Promise<HttpResponse> {
-    const tenant: TenantDTO = httpRequest.body
+    const { body } = httpRequest
 
     try {
-      this.checkIfCnpjAlreadyExists(tenant.cnpj)
+      const tenant: TenantDTO = tenantSchema.parse(body)
+
+      if (await this.checkCnpjExistsUseCase.execute(tenant.cnpj)) {
+        return httpStatus.conflict('CNPJ Already exists')
+      }
 
       const response = await this.createTenantUseCase.execute(tenant)
 
       return httpStatus.created('Tenant Created', response)
     } catch (error: any) {
-      return error.message === 'CNPJ Already exists'
-        ? httpStatus.conflict(error.message)
-        : httpStatus.badRequest(error.message)
+      return httpStatus.badRequest(error)
     }
   }
 
   async update(httpRequest: HttpRequest): Promise<HttpResponse> {
-    const tenant: TenantDTO = httpRequest.body
     const id: string = httpRequest.params.id
+    const { body } = httpRequest
 
     try {
-      this.checkIfCnpjAlreadyExists(tenant.cnpj)
+      const tenant: TenantDTO = tenantSchema.parse(body)
+
+      if (await this.checkCnpjExistsUseCase.execute(tenant.cnpj)) {
+        return httpStatus.conflict('CNPJ Already exists')
+      }
 
       const response = await this.updateTenantUseCase.execute(id, tenant)
 
       return httpStatus.ok('Tenant Updated', response)
     } catch (error: any) {
-      return error.message === 'CNPJ Already exists'
-        ? httpStatus.conflict(error.message)
-        : httpStatus.badRequest(error.message)
+      return httpStatus.badRequest(error)
     }
   }
 
@@ -61,7 +65,7 @@ class TenantsController {
 
       return httpStatus.ok('Tenant Found', response)
     } catch (error: any) {
-      return httpStatus.badRequest(error.message)
+      return httpStatus.badRequest(error)
     }
   }
 
@@ -71,7 +75,7 @@ class TenantsController {
 
       return httpStatus.ok('Tenants Found', response)
     } catch (error: any) {
-      return httpStatus.badRequest(error.message)
+      return httpStatus.badRequest(error)
     }
   }
 
@@ -83,15 +87,7 @@ class TenantsController {
 
       return httpStatus.noContent('Tenant Disabled')
     } catch (error: any) {
-      return httpStatus.badRequest(error.message)
-    }
-  }
-
-  private async checkIfCnpjAlreadyExists(cnpj: string): Promise<HttpResponse | void> {
-    const cnpjAlreadyExists = await this.checkCnpjExistsUseCase.execute(cnpj)
-
-    if (cnpjAlreadyExists) {
-      throw new Error('CNPJ Already exists')
+      return httpStatus.badRequest(error)
     }
   }
 }

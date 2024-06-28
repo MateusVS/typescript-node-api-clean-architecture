@@ -1,4 +1,5 @@
-import { HttpResponse } from '../../main/adapters/http.adapter'
+import { HttpResponse } from '@main/adapters/http.adapter'
+import { ZodError } from 'zod'
 
 export const ok = (message: string, data?: any): HttpResponse => ({
   status: 200,
@@ -17,10 +18,20 @@ export const noContent = (message: string): HttpResponse => ({
   message,
 })
 
-export const badRequest = (message: string): HttpResponse => ({
-  status: 400,
-  message,
-})
+export const badRequest = (error: any): HttpResponse => {
+  let { message } = error
+
+  console.log(error.errors)
+
+  if (error instanceof ZodError) {
+    message = error.errors.map(err => `${err.path}: ${err.message}`).join(' \n ')
+  }
+
+  return {
+    status: 400,
+    message,
+  }
+}
 
 export const notFound = (message: string): HttpResponse => ({
   status: 404,

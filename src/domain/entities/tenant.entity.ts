@@ -1,4 +1,4 @@
-import { baseEntity } from './base.entity';
+import { baseEntity } from './base.entity'
 
 type TenantProps = {
   id: string

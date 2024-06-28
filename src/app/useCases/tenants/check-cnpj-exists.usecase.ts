@@ -1,4 +1,4 @@
-import { TenantsRepository } from '../../repositories/tenants.repository'
+import { TenantsRepository } from '@app/repositories/tenants.repository'
 
 class CheckCnpjExistsUseCase {
   constructor(private repository: TenantsRepository) { }
