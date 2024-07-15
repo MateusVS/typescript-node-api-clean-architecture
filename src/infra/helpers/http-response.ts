@@ -1,4 +1,5 @@
 import { HttpResponse } from '@main/adapters/http.adapter'
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import { ZodError } from 'zod'
 
 export const ok = (message: string, data?: any): HttpResponse => ({
@@ -21,10 +22,10 @@ export const noContent = (message: string): HttpResponse => ({
 export const badRequest = (error: any): HttpResponse => {
   let { message } = error
 
-  console.log(error.errors)
-
   if (error instanceof ZodError) {
     message = error.errors.map(err => `${err.path}: ${err.message}`).join(' \n ')
+  } else if (error instanceof PrismaClientKnownRequestError) {
+    message = `Prisma error: ${error.message}`
   }
 
   return {

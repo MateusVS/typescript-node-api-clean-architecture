@@ -18,7 +18,6 @@ const showTenantUseCase = new ShowTenantUsecase(repository)
 const disableTenantUseCase = new DisableTenantUseCase(repository)
 const checkCnpjExistsUseCase = new CheckCnpjExistsUseCase(repository)
 
-
 const tenantsController = new TenantsController(
   createTenantUseCase,
   updateTenantUseCase,

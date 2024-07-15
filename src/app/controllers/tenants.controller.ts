@@ -27,7 +27,7 @@ class TenantsController {
       const tenant: TenantDTO = tenantSchema.parse(body)
 
       if (await this.checkCnpjExistsUseCase.execute(tenant.cnpj)) {
-        return httpStatus.conflict('CNPJ Already exists')
+        return httpStatus.conflict('CNPJ already exists')
       }
 
       const response = await this.createTenantUseCase.execute(tenant)
@@ -46,7 +46,7 @@ class TenantsController {
       const tenant: TenantDTO = tenantSchema.parse(body)
 
       if (await this.checkCnpjExistsUseCase.execute(tenant.cnpj)) {
-        return httpStatus.conflict('CNPJ Already exists')
+        return httpStatus.conflict('CNPJ already exists')
       }
 
       const response = await this.updateTenantUseCase.execute(id, tenant)
@@ -62,6 +62,10 @@ class TenantsController {
 
     try {
       const response = await this.showTenantUseCase.execute(id)
+
+      if (response == null) {
+        return httpStatus.noContent('Tenant Not Found')
+      }
 
       return httpStatus.ok('Tenant Found', response)
     } catch (error: any) {
