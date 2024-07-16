@@ -23,7 +23,7 @@ export const badRequest = (error: any): HttpResponse => {
   let { message } = error
 
   if (error instanceof ZodError) {
-    message = error.errors.map(err => `${err.path}: ${err.message}`).join(' \n ')
+    message = error.errors.map(err => `${err.path}: ${err.message.split('\n')}`).join(' ')
   } else if (error instanceof PrismaClientKnownRequestError) {
     message = `Prisma error: ${error.message}`
   }

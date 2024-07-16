@@ -7,13 +7,34 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Tenants {
+model Tenant {
   id        String   @id @default(uuid())
   name      String   @db.VarChar(255)
-  cnpj      String   @db.VarChar(18) @unique
+  cnpj      String   @unique @db.VarChar(18)
   actived   Boolean  @default(false)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("update_at")
 
+  users User[]
+
+  @@index([name, cnpj])
   @@map("tenants")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique @db.VarChar(255)
+  name      String   @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  actived   Boolean  @default(false)
+  avatarUrl String   @map("avatar_url") @db.VarChar(255)
+  tenantId  String   @map("tenant_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("update_at")
+
+  Tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@index([email, password])
+  @@index([email, name, avatarUrl])
+  @@map("users")
 }
