@@ -5,15 +5,15 @@ import { prisma } from '../prisma'
 
 class PrismaTenantsRepository extends TenantsRepository {
   async create(data: TenantDTO): Promise<Tenant> {
-    return await prisma.tenants.create({ data })
+    return await prisma.tenant.create({ data })
   }
 
   async findAll(): Promise<Tenant[] | null> {
-    return await prisma.tenants.findMany()
+    return await prisma.tenant.findMany()
   }
 
   async findOne(id: string): Promise<Tenant | null> {
-    return await prisma.tenants.findFirst({
+    return await prisma.tenant.findUnique({
       where: {
         id,
       },
@@ -21,7 +21,7 @@ class PrismaTenantsRepository extends TenantsRepository {
   }
 
   async findByCnpj(cnpj: string): Promise<Tenant | null> {
-    return await prisma.tenants.findFirst({
+    return await prisma.tenant.findUnique({
       where: {
         cnpj,
       },
@@ -29,7 +29,7 @@ class PrismaTenantsRepository extends TenantsRepository {
   }
 
   async update(id: string, data: TenantDTO): Promise<Tenant> {
-    return await prisma.tenants.update({
+    return await prisma.tenant.update({
       where: {
         id
       },
@@ -38,7 +38,7 @@ class PrismaTenantsRepository extends TenantsRepository {
   }
 
   async disable(id: string): Promise<void> {
-    await prisma.tenants.update({
+    await prisma.tenant.update({
       where: {
         id
       },

@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, Mock, vi } from 'vitest'
 import { Request, Response } from 'express'
 import { BadRequestError } from '@main/errors/bad-request.error'
 import { z } from 'zod'
-import { validateBodyMiddleware } from '@infra/middlewares/validate-body.middleware'
+import { validateBodyMiddleware } from '@main/middlewares/validate-body.middleware'
 
 describe('validateBodyMiddleware', () => {
   let req: Partial<Request>

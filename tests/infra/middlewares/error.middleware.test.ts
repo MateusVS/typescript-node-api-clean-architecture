@@ -1,4 +1,4 @@
-import { errorMiddleware } from '@infra/middlewares/error.middleware'
+import { errorMiddleware } from '@main/middlewares/error.middleware'
 import { NextFunction, Request, Response } from 'express'
 import { HttpException } from 'src/types/HttpException'
 import { describe, expect, vi, it, beforeAll, Mock } from 'vitest'

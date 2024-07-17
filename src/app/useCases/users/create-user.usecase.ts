@@ -1,31 +1,26 @@
 import { CreateUserDTO } from '@app/dto/users/user.dto'
 import { UsersRepository } from '@app/repositories/users.repository'
+import { UsersService } from '@app/services/users.service'
 import { User } from '@domain/entities/user.entity'
-import { encrypt } from '@infra/lib/bcrypt'
+import { Hasher } from '@domain/protocols'
+import { File } from '@domain/protocols/file'
 
 class CreateUserUseCase {
-  constructor(private repository: UsersRepository) {}
+  constructor(
+    private repository: UsersRepository,
+    private service: UsersService,
+    private hasherService: Hasher,
+  ) {}
 
-  async execute(user: CreateUserDTO): Promise<User> {
-    await this.checkIfEmailExist(user.email)
+  async execute(user: CreateUserDTO, file?: File): Promise<User> {
+    const { email, password } = user
 
-    user.password = this.encryptPassword(user.password)
+    await this.service.checkIfEmailAlreadyExists(email)
+
+    user.password = await this.hasherService.encrypt(password)
+    user.avatarUrl = this.service.getAvatarUrl(file)
 
     return await this.repository.create(user)
-  }
-
-  private async checkIfEmailExist(email: string): Promise<void> {
-    const user = await this.repository.findByEmail(email)
-
-    if (user) {
-      throw new Error(
-        'O e-mail informado já está sendo utilizado por outro usuário',
-      )
-    }
-  }
-
-  private encryptPassword(password: string): string {
-    return encrypt(password)
   }
 }
 
