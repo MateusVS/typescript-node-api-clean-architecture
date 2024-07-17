@@ -1,8 +1,7 @@
 import { HttpRequest, HttpResponse } from '@main/adapters/http.adapter'
 import * as httpStatus from '@infra/helpers/http-response'
-import { TenantDTO, tenantSchema } from '@app/dto/tenants/tenant.dto'
+import { TenantDTO } from '@app/dto/tenants/tenant.dto'
 import {
-  CheckCnpjExistsUseCase,
   CreateTenantsUseCase,
   DisableTenantUseCase,
   ListAllTenantsUsecase,
@@ -17,18 +16,11 @@ class TenantsController {
     private listAllTenantsUseCase: ListAllTenantsUsecase,
     private showTenantUseCase: ShowTenantUsecase,
     private disableTenantUseCase: DisableTenantUseCase,
-    private checkCnpjExistsUseCase: CheckCnpjExistsUseCase,
-  ) { }
+  ) {}
 
   async create(httpRequest: HttpRequest): Promise<HttpResponse> {
-    const { body } = httpRequest
-
     try {
-      const tenant: TenantDTO = tenantSchema.parse(body)
-
-      if (await this.checkCnpjExistsUseCase.execute(tenant.cnpj)) {
-        return httpStatus.conflict('CNPJ already exists')
-      }
+      const tenant: TenantDTO = httpRequest.body
 
       const response = await this.createTenantUseCase.execute(tenant)
 
@@ -39,15 +31,9 @@ class TenantsController {
   }
 
   async update(httpRequest: HttpRequest): Promise<HttpResponse> {
-    const id: string = httpRequest.params.id
-    const { body } = httpRequest
-
     try {
-      const tenant: TenantDTO = tenantSchema.parse(body)
-
-      if (await this.checkCnpjExistsUseCase.execute(tenant.cnpj)) {
-        return httpStatus.conflict('CNPJ already exists')
-      }
+      const { id } = httpRequest.params
+      const tenant: TenantDTO = httpRequest.body
 
       const response = await this.updateTenantUseCase.execute(id, tenant)
 
@@ -58,9 +44,9 @@ class TenantsController {
   }
 
   async show(httpRequest: HttpRequest): Promise<HttpResponse> {
-    const id: string = httpRequest.params.id
-
     try {
+      const { id } = httpRequest.params
+
       const response = await this.showTenantUseCase.execute(id)
 
       if (response == null) {
@@ -84,9 +70,9 @@ class TenantsController {
   }
 
   async disable(httpRequest: HttpRequest): Promise<HttpResponse> {
-    const id: string = httpRequest.params.id
-
     try {
+      const { id } = httpRequest.params
+
       await this.disableTenantUseCase.execute(id)
 
       return httpStatus.noContent('Tenant Disabled')

@@ -4,7 +4,6 @@ import { TenantDTO } from '@app/dto/tenants/tenant.dto'
 import { TenantsController } from '@app/controllers/tenants.controller'
 import {
   CreateTenantsUseCase,
-  CheckCnpjExistsUseCase,
   UpdateTenantsUseCase,
   ListAllTenantsUsecase,
   ShowTenantUsecase,
@@ -17,7 +16,6 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 
 describe('TenantsController', () => {
   let createTenantsUseCase: CreateTenantsUseCase
-  let checkCnpjExistsUseCase: CheckCnpjExistsUseCase
   let updateTenantUseCase: UpdateTenantsUseCase
   let listAllTenantsUseCase: ListAllTenantsUsecase
   let showTenantUseCase: ShowTenantUsecase
@@ -38,7 +36,6 @@ describe('TenantsController', () => {
         ...data,
       })
     } as any
-    checkCnpjExistsUseCase = { execute: vi.fn().mockResolvedValue(false) } as any
     updateTenantUseCase = {
       execute: vi.fn().mockResolvedValue({
         id: '1',
@@ -57,7 +54,6 @@ describe('TenantsController', () => {
       listAllTenantsUseCase,
       showTenantUseCase,
       disableTenantUseCase,
-      checkCnpjExistsUseCase,
     )
   })
 
@@ -75,31 +71,7 @@ describe('TenantsController', () => {
         updatedAt,
         ...data,
       }))
-      expect(checkCnpjExistsUseCase.execute).toHaveBeenCalledWith(data.cnpj)
       expect(createTenantsUseCase.execute).toHaveBeenCalledWith(data)
-    })
-
-    it('Should return 409 when CNPJ already exists', async () => {
-      checkCnpjExistsUseCase.execute = vi.fn().mockResolvedValue(true)
-
-      const request: HttpRequest = { body: data }
-      const response: HttpResponse = await tenantsController.create(request)
-
-      expect(response.status).toBe(409)
-      expect(response).toEqual(httpStatus.conflict('CNPJ already exists'))
-      expect(checkCnpjExistsUseCase.execute).toHaveBeenCalledWith(data.cnpj)
-      expect(createTenantsUseCase.execute).not.toHaveBeenCalled()
-    })
-
-    it('Should return 400 when data is invalid', async () => {
-      const invalidBody = { invalid: 'data' }
-      const httpRequest: HttpRequest = { body: invalidBody }
-
-      const httpResponse: HttpResponse = await tenantsController.create(httpRequest)
-
-      expect(httpResponse.status).toBe(400)
-      expect(createTenantsUseCase.execute).not.toHaveBeenCalled()
-      expect(checkCnpjExistsUseCase.execute).not.toHaveBeenCalled()
     })
   })
 
@@ -116,20 +88,7 @@ describe('TenantsController', () => {
         updatedAt,
         ...data,
       }))
-      expect(checkCnpjExistsUseCase.execute).toHaveBeenCalledWith(data.cnpj)
       expect(updateTenantUseCase.execute).toHaveBeenCalledWith('1', data)
-    })
-
-    it('Should return 409 when CNPJ already exists', async () => {
-      checkCnpjExistsUseCase.execute = vi.fn().mockResolvedValue(true)
-
-      const request: HttpRequest = { params: { id: '1' }, body: data }
-      const response: HttpResponse = await tenantsController.update(request)
-
-      expect(response.status).toBe(409)
-      expect(response).toEqual(httpStatus.conflict('CNPJ already exists'))
-      expect(checkCnpjExistsUseCase.execute).toHaveBeenCalledWith(data.cnpj)
-      expect(updateTenantUseCase.execute).not.toHaveBeenCalled()
     })
 
     it('Should return 400 when tenant ID does not exist', async () => {
@@ -144,17 +103,6 @@ describe('TenantsController', () => {
 
       expect(httpResponse.status).toBe(400)
       expect(updateTenantUseCase.execute).toHaveBeenCalledWith('non-existent-id', data)
-    })
-
-    it('Should return 400 when data is invalid', async () => {
-      const invalidBody = { invalid: 'data' }
-      const httpRequest: HttpRequest = { params: { id: '1' }, body: invalidBody } as any
-
-      const httpResponse: HttpResponse = await tenantsController.update(httpRequest)
-
-      expect(httpResponse.status).toBe(400)
-      expect(updateTenantUseCase.execute).not.toHaveBeenCalled()
-      expect(checkCnpjExistsUseCase.execute).not.toHaveBeenCalled()
     })
   })
 
