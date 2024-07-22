@@ -1,4 +1,4 @@
-import { HttpException } from '../../types/HttpException'
+import { HttpException } from '../../@types/http-exception'
 
 class UnsupportedMediaType extends HttpException {
   constructor(message: string = 'Unsupported Media Type') {

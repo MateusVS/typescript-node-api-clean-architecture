@@ -1,4 +1,4 @@
-import { CreateUserDTO } from '@app/dto/users/user.dto'
+import { CreateUserDTO } from '@app/dto/users/create-user.dto'
 import { UsersRepository } from '@app/repositories/users.repository'
 import { UsersService } from '@app/services/users.service'
 import { User } from '@domain/entities/user.entity'

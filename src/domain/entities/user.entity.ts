@@ -12,7 +12,7 @@ type UserProps = {
   createdAt: Date
   updatedAt: Date
 
-  tenant?: Tenant
+  tenant?: Tenant | null
 }
 
 class User extends baseEntity {
@@ -23,7 +23,7 @@ class User extends baseEntity {
   avatarUrl: string
   tenantId: string
 
-  tenant?: Tenant
+  tenant?: Tenant | null
 
   constructor(entity: UserProps) {
     super(entity)
@@ -34,7 +34,7 @@ class User extends baseEntity {
     this.actived = entity.actived
     this.avatarUrl = entity.avatarUrl
     this.tenantId = entity.tenantId
-    this.tenant = entity.tenant
+    this.tenant = entity.tenant || null
   }
 }
 

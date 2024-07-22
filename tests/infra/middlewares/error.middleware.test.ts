@@ -1,6 +1,6 @@
 import { errorMiddleware } from '@main/middlewares/error.middleware'
 import { NextFunction, Request, Response } from 'express'
-import { HttpException } from 'src/types/HttpException'
+import { HttpException } from 'src/@types/http-exception'
 import { describe, expect, vi, it, beforeAll, Mock } from 'vitest'
 
 let mockRequest: Partial<Request>

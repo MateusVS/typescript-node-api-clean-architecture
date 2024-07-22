@@ -9,16 +9,7 @@ export const createUserSchema = z.object({
   tenantId: z.string(),
 })
 
-export const updateUserSchema = z.object({
-  name: z.string(),
-  password: z.string().min(8).nullable(),
-  avatarUrl: z.string().nullable().optional(),
-  actived: z.boolean(),
-  tenantId: z.string(),
-})
-
 type CreateUserDTO = z.infer<typeof createUserSchema>
-type UpdateUserDTO = z.infer<typeof updateUserSchema>
 
-export { CreateUserDTO, UpdateUserDTO }
+export { CreateUserDTO }
 

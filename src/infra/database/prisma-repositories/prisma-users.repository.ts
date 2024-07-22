@@ -1,7 +1,7 @@
 import { UsersRepository } from '@app/repositories/users.repository'
 import { prisma } from '../prisma'
 import { User } from '@domain/entities/user.entity'
-import { CreateUserDTO, UpdateUserDTO } from '@app/dto/users/user.dto'
+import { CreateUserDTO, UpdateUserDTO } from '@app/dto/users'
 import { isNullOrEmpty } from '@infra/helpers/string-functions'
 
 class PrismaUsersRepository extends UsersRepository {
@@ -56,6 +56,17 @@ class PrismaUsersRepository extends UsersRepository {
     })
   }
 
+  async authenticate(email: string, password: string): Promise<User | null> {
+    return await prisma.user.findUnique({
+      where: {
+        email,
+        password,
+      },
+      include: {
+        Tenant: true,
+      },
+    })
+  }
 }
 
 export { PrismaUsersRepository }

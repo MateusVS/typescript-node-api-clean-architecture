@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { HttpException } from '../../types/HttpException'
+import { HttpException } from '../../@types/http-exception'
 
 export function errorMiddleware(
   error: HttpException,
@@ -7,10 +7,15 @@ export function errorMiddleware(
   response: Response,
   next: NextFunction,
 ) {
-  let errorMessage = error.message || 'Internal server error'
+  if (error instanceof HttpException) {
+    return response.status(error.status).json({
+      status: error.status,
+      message: error.message,
+    })
+  }
 
-  return response.status(error.status).json({
-    status: error.status,
-    message: errorMessage,
+  return response.status(500).json({
+    status: 500,
+    message: 'Internal server error',
   })
 }

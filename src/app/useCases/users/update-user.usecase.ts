@@ -1,5 +1,5 @@
 import { UsersRepository } from '@app/repositories/users.repository'
-import { UpdateUserDTO } from '@app/dto/users/user.dto'
+import { UpdateUserDTO } from '@app/dto/users'
 import { User } from '@domain/entities/user.entity'
 import { isNullOrEmpty } from '@infra/helpers/string-functions'
 import { Hasher } from '@domain/protocols'

@@ -1,6 +1,6 @@
 import { HttpRequest, HttpResponse } from '@main/adapters/http.adapter'
 import * as httpStatus from '@infra/helpers/http-response'
-import { CreateUserDTO, UpdateUserDTO } from '@app/dto/users/user.dto'
+import { CreateUserDTO, UpdateUserDTO } from '@app/dto/users'
 import { File } from '@domain/protocols/file'
 import {
   CreateUserUseCase,

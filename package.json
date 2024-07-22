@@ -11,7 +11,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "seed:dev": "tsx src/infra/database/seeds/seed.ts",
+    "seed": "node dist/infra/database/seeds/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "5.15.0",
