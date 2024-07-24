@@ -19,11 +19,13 @@ class CreateSessionUseCase {
 
     const token = await this.encypterService.encrypt(userAuth.id)
 
-    const { id, name } = userAuth
+    const { id, name, tenant } = userAuth
 
     return {
       userId: id,
       userName: name,
+      tenantId: tenant?.id ?? '',
+      tenantName: tenant?.name ?? '',
       token,
     }
   }

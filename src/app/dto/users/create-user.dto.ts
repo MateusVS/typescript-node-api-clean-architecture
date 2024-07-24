@@ -12,4 +12,3 @@ export const createUserSchema = z.object({
 type CreateUserDTO = z.infer<typeof createUserSchema>
 
 export { CreateUserDTO }
-

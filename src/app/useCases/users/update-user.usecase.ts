@@ -5,6 +5,7 @@ import { isNullOrEmpty } from '@infra/helpers/string-functions'
 import { Hasher } from '@domain/protocols'
 import { UsersService } from '@app/services/users.service'
 import { File } from '@domain/protocols/file'
+import { ReturnedUserDTO } from '@app/dto/users/returned-user.dto'
 
 class UpdateUserUseCase {
   constructor(
@@ -13,7 +14,7 @@ class UpdateUserUseCase {
     private hasherService: Hasher,
   ) {}
 
-  async execute(id: string, user: UpdateUserDTO, file?: File): Promise<User> {
+  async execute(id: string, user: UpdateUserDTO, file?: File): Promise<ReturnedUserDTO> {
     const { password } = user
 
     if (!isNullOrEmpty(password)) {
@@ -22,7 +23,10 @@ class UpdateUserUseCase {
 
     user.avatarUrl = this.service.getAvatarUrl(file)
 
-    return await this.repository.update(id, user)
+    const updatedUser = await this.repository.update(id, user)
+    const { password: _, ...userWithoutPassword } = updatedUser
+
+    return userWithoutPassword
   }
 }
 

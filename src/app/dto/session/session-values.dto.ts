@@ -1,9 +1,11 @@
 import { z } from 'zod'
 
-const sessionValuesSchema = z.object({
+export const sessionValuesSchema = z.object({
   token: z.string(),
-  userId: z.string(),
+  userId: z.string().uuid(),
   userName: z.string(),
+  tenantId: z.string().uuid(),
+  tenantName: z.string(),
 })
 
 type SessionValueDTO = z.infer<typeof sessionValuesSchema>

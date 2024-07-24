@@ -1,4 +1,5 @@
 import { CreateUserDTO } from '@app/dto/users/create-user.dto'
+import { ReturnedUserDTO } from '@app/dto/users/returned-user.dto'
 import { UsersRepository } from '@app/repositories/users.repository'
 import { UsersService } from '@app/services/users.service'
 import { User } from '@domain/entities/user.entity'
@@ -12,7 +13,7 @@ class CreateUserUseCase {
     private hasherService: Hasher,
   ) {}
 
-  async execute(user: CreateUserDTO, file?: File): Promise<User> {
+  async execute(user: CreateUserDTO, file?: File): Promise<ReturnedUserDTO> {
     const { email, password } = user
 
     await this.service.checkIfEmailAlreadyExists(email)
@@ -20,7 +21,10 @@ class CreateUserUseCase {
     user.password = await this.hasherService.encrypt(password)
     user.avatarUrl = this.service.getAvatarUrl(file)
 
-    return await this.repository.create(user)
+    const newUser: User = await this.repository.create(user)
+    const { password: _, ...userWithoutPassword } = newUser
+
+    return userWithoutPassword
   }
 }
 
